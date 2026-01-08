@@ -1,0 +1,72 @@
+version: '3'
+services:
+  osrm-fr:
+    image: ghcr.io/project-osrm/osrm-backend:latest
+    container_name: osrm-fr
+    restart: always
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./osrm-data:/data
+    command: osrm-routed --algorithm mld /data/france-latest.osrm
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
+  osrm-gp:
+    image: ghcr.io/project-osrm/osrm-backend:latest
+    container_name: osrm-gp
+    restart: always
+    ports:
+      - "5002:5000"
+    volumes:
+      - ./osrm-data:/data
+    command: osrm-routed --algorithm mld /data/guadeloupe-latest.osrm
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  osrm-mq:
+    image: ghcr.io/project-osrm/osrm-backend:latest
+    container_name: osrm-mq
+    restart: always
+    ports:
+      - "5003:5000"
+    volumes:
+      - ./osrm-data:/data
+    command: osrm-routed --algorithm mld /data/martinique-latest.osrm
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+  osrm-corse:
+    image: ghcr.io/project-osrm/osrm-backend:latest
+    container_name: osrm-corse
+    restart: always
+    ports:
+      - "5004:5000"
+    volumes:
+      - ./osrm-data:/data
+    command: osrm-routed --algorithm mld /data/corse-latest.osrm
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  vroom:
+    image: ghcr.io/vroom-project/vroom-docker:latest
+    container_name: vroom
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./conf:/conf
+    environment:
+      - VROOM_ROUTER=osrm
+    depends_on:
+      - osrm-fr
+      - osrm-gp
+      - osrm-mq
+      - osrm-corse

@@ -1,0 +1,201 @@
+@import 'leaflet/dist/leaflet.css';
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light Theme Foundation */
+    --background: 210 40% 98%;
+    /* Light gray/blueish background for the page */
+    --foreground: 222 47% 11%;
+    /* Dark Slate text */
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Brand Colors - Adjusted for Light Mode */
+    --primary: 199 89% 48%;
+    /* Solid Blue/Cyan that reads well on white */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 262 83% 58%;
+    /* Purple */
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 89%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 144 70% 97%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 199 89% 48%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar Variables - Forced Dark */
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 20%;
+    --sidebar-ring: 199 89% 48%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(199 89% 48%), hsl(262 83% 58%));
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  }
+
+  .dark {
+    /* Optional Dark Mode Preservation */
+    --background: 224 71% 4%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 190 100% 50%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 262 80% 50%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 20%;
+    --input: 217 33% 17%;
+    --ring: 190 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer components {
+
+  /* Modern Card */
+  .glass-card {
+    @apply rounded-xl border border-border bg-card shadow-sm transition-all duration-200;
+  }
+
+  .glass-card:hover {
+    @apply shadow-md border-primary/20;
+  }
+
+  /* Named Card for Dashboard (formerly Neon Panel) - Now just a clean card */
+  .neon-panel {
+    @apply relative overflow-hidden rounded-xl border border-border bg-card p-6 shadow-sm transition-all;
+  }
+
+  /* Optional: Keep a subtle top accent for the "neon" feel but clean */
+  .neon-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary)), transparent);
+    opacity: 0.8;
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 15px hsl(var(--primary) / 0.2);
+  }
+
+  /* Stat Card - White/Light */
+  .stat-card {
+    @apply relative overflow-hidden rounded-xl p-5 border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md;
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary font-bold;
+  }
+
+  /* Sidebar Items */
+  .sidebar-item {
+    @apply flex items-center gap-3 px-3 py-3 rounded-lg text-sidebar-foreground/70 transition-all duration-200 hover:text-white hover:bg-white/10 border border-transparent;
+  }
+
+  .sidebar-item-active {
+    @apply bg-primary/10 text-primary border-primary/20;
+    /* Use primary color for the highlight even in dark sidebar, but ensure text is readable */
+    @apply text-white bg-white/10;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm transition-all active:scale-95 font-semibold rounded-lg px-4 py-2;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary/10 text-secondary hover:bg-secondary/20 border border-secondary/20 shadow-sm transition-all active:scale-95 font-semibold rounded-lg px-4 py-2;
+  }
+
+  .btn-glass {
+    @apply bg-white hover:bg-gray-50 text-foreground border border-input shadow-sm transition-all rounded-lg px-4 py-2;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.6);
+  }
+}

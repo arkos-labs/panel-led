@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API GPS</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-card.total { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .stat-card.with-gps { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
+        .stat-card.missing { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        .stat-card.percentage { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .client-list {
+            margin-top: 20px;
+        }
+        .client-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #f5576c;
+        }
+        .client-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .client-address {
+            color: #666;
+            font-size: 14px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ Test API Diagnostic GPS</h1>
+        <p class="subtitle">Vérification des coordonnées géographiques des clients</p>
+        
+        <div>
+            <button onclick="checkGPS()">🔍 Vérifier GPS</button>
+            <button onclick="scanGPS()" id="scanBtn">🚀 Lancer le scan</button>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Chargement en cours...</p>
+        </div>
+
+        <div id="stats" style="display: none;"></div>
+        <div id="clients" style="display: none;"></div>
+        <div id="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3001';
+
+        async function checkGPS() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('clients').style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_URL}/api/clients/check-gps`);
+                const data = await response.json();
+                
+                console.log('📊 Données GPS:', data);
+                
+                displayStats(data);
+                displayClients(data.clientsWithoutGPS);
+                
+            } catch (error) {
+                console.error('❌ Erreur:', error);
+                alert('Erreur lors de la vérification GPS. Vérifiez que le serveur est démarré.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        async function scanGPS() {
+            if (!confirm('Voulez-vous lancer le géocodage automatique ?')) return;
+
+            const btn = document.getElementById('scanBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Scan en cours...';
+            
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                const response = await fetch(`${API_URL}/api/clients/scan-gps`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                console.log('✅ Résultat scan:', data);
+                
+                document.getElementById('result').innerHTML = `
+                    <div class="success">
+                        <h3>✅ Scan terminé !</h3>
+                        <p><strong>${data.fixed}</strong> client(s) géocodé(s)</p>
+                        <p><strong>${data.failed}</strong> échec(s)</p>
+                        <p><strong>${data.total}</strong> total traité</p>
+                    </div>
+                `;
+                document.getElementById('result').style.display = 'block';
+                
+                // Rafraîchir après 2 secondes
+                setTimeout(() => checkGPS(), 2000);
+                
+            } catch (error) {
+                console.error('❌ Erreur scan:', error);
+                alert('Erreur lors du scan GPS.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                btn.disabled = false;
+                btn.textContent = '🚀 Lancer le scan';
+            }
+        }
+
+        function displayStats(data) {
+            const statsHTML = `
+                <div class="stats">
+                    <div class="stat-card total">
+                        <div class="stat-label">Total Clients</div>
+                        <div class="stat-value">${data.total}</div>
+                    </div>
+                    <div class="stat-card with-gps">
+                        <div class="stat-label">✅ Avec GPS</div>
+                        <div class="stat-value">${data.withGPS}</div>
+                    </div>
+                    <div class="stat-card missing">
+                        <div class="stat-label">❌ Sans GPS</div>
+                        <div class="stat-value">${data.missingGPS}</div>
+                    </div>
+                    <div class="stat-card percentage">
+                        <div class="stat-label">Couverture</div>
+                        <div class="stat-value">${data.percentage}%</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('stats').innerHTML = statsHTML;
+            document.getElementById('stats').style.display = 'block';
+        }
+
+        function displayClients(clients) {
+            if (clients.length === 0) {
+                document.getElementById('clients').innerHTML = `
+                    <div class="success">
+                        <h3>🎉 Parfait !</h3>
+                        <p>Tous vos clients ont des coordonnées GPS valides.</p>
+                    </div>
+                `;
+            } else {
+                const clientsHTML = `
+                    <div class="client-list">
+                        <h3>⚠️ Clients sans GPS (${clients.length})</h3>
+                        ${clients.map(client => `
+                            <div class="client-item">
+                                <div class="client-name">${client.prenom} ${client.nom}</div>
+                                <div class="client-address">📍 ${client.adresse || 'Adresse non renseignée'}</div>
+                                <div class="client-address" style="margin-top: 5px; font-size: 12px;">
+                                    ID: ${client.id} | Statut: ${client.statut || 'Non défini'}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                document.getElementById('clients').innerHTML = clientsHTML;
+            }
+            document.getElementById('clients').style.display = 'block';
+        }
+
+        // Auto-load au démarrage
+        window.onload = () => {
+            checkGPS();
+        };
+    </script>
+</body>
+</html>

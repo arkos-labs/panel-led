@@ -1,0 +1,50 @@
+# ================================================
+# CI - Validation des Pull Requests
+# Vérifie le code avant merge
+# ================================================
+
+name: Pull Request Validation
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  validate:
+    name: Validate PR
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔍 Lint check
+        run: npm run lint --if-present
+        continue-on-error: false
+
+      - name: 🏗️ Build check
+        run: npm run build
+
+      - name: 📊 Build size report
+        run: |
+          echo "### 📦 Build Size Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          du -sh dist/ >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: ✅ PR validation passed
+        run: |
+          echo "✅ Pull Request validation passed!"
+          echo "Ready to merge 🚀"

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<meta charset="UTF-8">
+<link rel="icon" href="https://www.geofabrik.de/favicon.ico" />
+<meta name="description" content="Download OpenStreetMap data for France for self-hosting or data analysis. OSM PBF and Shapefiles available.">
+<meta name="og:description" content="Download OpenStreetMap data for France for self-hosting or data analysis. OSM PBF and Shapefiles available.">
+<meta property="og:image" content="https://www.geofabrik.de/img/geofabrik_logo_notext.svg">
+<meta property="og:site_name" content="Geofabrik Download Server">
+<title>Download OpenStreetMap for France | Geofabrik Download Server</title>
+    <script type="text/javascript" src="//static.geofabrik.de/ol212/OpenLayers.js"></script>
+    <script type="text/javascript">
+        var map, layer, countryLayer;
+        function init()
+        {
+            map = new OpenLayers.Map('map');
+            layer = new OpenLayers.Layer.OSM("",
+                ["https://a.tile.geofabrik.de/5f33d2afc5074c6da1a5c2a8a960d501/${z}/${x}/${y}.png",
+                 "https://b.tile.geofabrik.de/5f33d2afc5074c6da1a5c2a8a960d501/${z}/${x}/${y}.png",
+                 "https://c.tile.geofabrik.de/5f33d2afc5074c6da1a5c2a8a960d501/${z}/${x}/${y}.png",
+                ],
+                { attribution: "", tileOptions : {crossOriginKeyword: null} }
+            ); // attribution in page footer
+            map.addLayer(layer);
+            layer = new OpenLayers.Layer.Vector("KML", {
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: "france.kml",
+                format: new OpenLayers.Format.KML({
+                    maxDepth: 2
+                })
+            }),
+            styleMap: new OpenLayers.StyleMap({
+            "default": new OpenLayers.Style({
+                graphicName: "cross",
+                pointRadius: 6,
+                fillOpacity: 0.50,
+                fillColor: "#ffcc66",
+                strokeColor: "#ff9933",
+                strokeWidth: 2
+            })
+            })
+            });
+            layer.events.register("loadend", this, function() { map.zoomToExtent(layer.getDataExtent()); });
+            map.addLayer(layer);
+        }
+        function loadkml(kmlname)
+        {
+            if (countryLayer) map.removeLayer(countryLayer);
+            countryLayer = 
+                new OpenLayers.Layer.Vector("KML", {
+                strategies: [new OpenLayers.Strategy.Fixed()],
+                protocol: new OpenLayers.Protocol.HTTP({
+                    url: kmlname,
+                    format: new OpenLayers.Format.KML({
+                        extractStyles: true,
+                        extractAttributes: true,
+                        maxDepth: 2
+                    })
+                })
+                });
+            map.addLayer(countryLayer);
+        }
+    </script>
+<link rel="stylesheet" type="text/css" href="/download.donation.css">
+</head><body onload='init();'><div id="donation">
+Do you find OpenStreetMap data useful? Consider giving something back in the OSMF's <a href="//supporting.openstreetmap.org">funding campaign!</a>
+</div>
+<div id="download-top">
+   <div id="download-top-right">
+      <img alt="header image" src="/img/geofabrik-downloads.png" height="20">
+   </div>
+</div>
+<div id="download-titlebar">
+<h1>Download OpenStreetMap data for this region:</h1>
+</div>
+<div class="download-main">
+<div class="leftColumn"><h2>France</h2>
+<p><a href="/europe.html">[one level up]</a></p>    <p class="isPublicInfo">
+        The OpenStreetMap data files provided on this server do <b>not</b> contain the user names, user
+        IDs and changeset IDs of the OSM objects because these fields are assumed to contain personal
+        information about the OpenStreetMap contributors and are therefore subject to data protection regulations
+        in the European Union. 
+        <br>
+        <a href="https://osm-internal.download.geofabrik.de/europe/france.html">Extracts with full metadata</a> are available to OpenStreetMap
+        contributors only.
+    </p>
+<h3>Note</h3><p>Note that while the DOM/TOM regions are listed under "Sub Regions" below for convenience, the "France" file only contains France Metropolitaine (mainland France).</p>
+<h3>Commonly Used Formats</h3>
+<ul>
+<li><a href="france-latest.osm.pbf">france-latest.osm.pbf,</a> suitable for
+           Osmium, Osmosis, imposm, osm2pgsql, mkgmap, and others. This file was last 
+           modified 16 hours ago and contains all OSM data up to 2026-01-06T21:21:12Z. File size: 4.6&nbsp;GB; MD5 sum: <a href="france-latest.osm.pbf.md5">393c0888d1cd9adb4f7f9063faf09fe0</a>. </li>
+
+<li><s>france-latest-free.shp.zip</s> is not available for this region; try one of the sub-regions.</li></ul><h3>Other Formats and Auxiliary Files</h3>
+<ul>
+<li><s>france-internal.osh.pbf</s> The history file
+                contains personal data and is available on the
+                <a href="https://osm-internal.download.geofabrik.de/europe/france.html">internal server</a>
+                only. See notice above for further information.
+                </li>
+<li><a href="france.poly">.poly file</a> that describes the extent
+               of this region.</li>
+<li><a href="france-updates">.osc.gz files</a>
+                that contain all changes in this region, suitable e.g. for
+                Osmosis updates</li>
+<li><a href="//taginfo.geofabrik.de/europe:france/">Taginfo statistics for this region</li>
+<li><a href="#" onclick="OpenLayers.Util.getElement('details').style.display='inline';">raw directory index</a> allowing you to
+            see and download older files</li></ul><div id="details" style="display:none"><table id="subregions"><tr><th class="subregion">file</th><th>date</th><th>size</th></tr><tr><td class="subregion"><a href="france-140101.osm.pbf">france-140101.osm.pbf</a></td><td class="subright">2014-01-02 02:03</td><td class="subright">2611335015</td></tr>
+<tr><td class="subregion"><a href="france-150101.osm.pbf">france-150101.osm.pbf</a></td><td class="subright">2015-01-02 04:07</td><td class="subright">2875444131</td></tr>
+<tr><td class="subregion"><a href="france-160101.osm.pbf">france-160101.osm.pbf</a></td><td class="subright">2016-01-02 04:41</td><td class="subright">3090097435</td></tr>
+<tr><td class="subregion"><a href="france-170101.osm.pbf">france-170101.osm.pbf</a></td><td class="subright">2017-01-02 04:12</td><td class="subright">3262346604</td></tr>
+<tr><td class="subregion"><a href="france-180101.osm.pbf">france-180101.osm.pbf</a></td><td class="subright">2018-01-02 01:03</td><td class="subright">3436303824</td></tr>
+<tr><td class="subregion"><a href="france-190101.osm.pbf">france-190101.osm.pbf</a></td><td class="subright">2019-01-02 00:04</td><td class="subright">3610767529</td></tr>
+<tr><td class="subregion"><a href="france-200101.osm.pbf">france-200101.osm.pbf</a></td><td class="subright">2020-02-19 15:26</td><td class="subright">3774209602</td></tr>
+<tr><td class="subregion"><a href="france-210101.osm.pbf">france-210101.osm.pbf</a></td><td class="subright">2021-01-02 01:14</td><td class="subright">3951277186</td></tr>
+<tr><td class="subregion"><a href="france-220101.osm.pbf">france-220101.osm.pbf</a></td><td class="subright">2022-01-02 03:47</td><td class="subright">4138048011</td></tr>
+<tr><td class="subregion"><a href="france-230101.osm.pbf">france-230101.osm.pbf</a></td><td class="subright">2023-01-02 03:13</td><td class="subright">4318870356</td></tr>
+<tr><td class="subregion"><a href="france-240101.osm.pbf">france-240101.osm.pbf</a></td><td class="subright">2024-01-02 02:48</td><td class="subright">4499503510</td></tr>
+<tr><td class="subregion"><a href="france-250101.osm.pbf">france-250101.osm.pbf</a></td><td class="subright">2025-01-02 03:33</td><td class="subright">4699752780</td></tr>
+<tr><td class="subregion"><a href="france-251101.osm.pbf">france-251101.osm.pbf</a></td><td class="subright">2025-11-02 03:36</td><td class="subright">4887984299</td></tr>
+<tr><td class="subregion"><a href="france-251101.osm.pbf.md5">france-251101.osm.pbf.md5</a></td><td class="subright">2025-11-02 03:36</td><td class="subright">56</td></tr>
+<tr><td class="subregion"><a href="france-251201.osm.pbf">france-251201.osm.pbf</a></td><td class="subright">2025-12-02 00:17</td><td class="subright">4906576053</td></tr>
+<tr><td class="subregion"><a href="france-251201.osm.pbf.md5">france-251201.osm.pbf.md5</a></td><td class="subright">2025-12-02 00:17</td><td class="subright">56</td></tr>
+<tr><td class="subregion"><a href="france-260101.osm.pbf">france-260101.osm.pbf</a></td><td class="subright">2026-01-02 03:57</td><td class="subright">4926479036</td></tr>
+<tr><td class="subregion"><a href="france-260101.osm.pbf.md5">france-260101.osm.pbf.md5</a></td><td class="subright">2026-01-02 03:57</td><td class="subright">56</td></tr>
+<tr><td class="subregion"><a href="france-260102.osm.pbf">france-260102.osm.pbf</a></td><td class="subright">2026-01-03 02:38</td><td class="subright">4927044602</td></tr>
+<tr><td class="subregion"><a href="france-260102.osm.pbf.md5">france-260102.osm.pbf.md5</a></td><td class="subright">2026-01-03 02:39</td><td class="subright">56</td></tr>
+<tr><td class="subregion"><a href="france-260103.osm.pbf">france-260103.osm.pbf</a></td><td class="subright">2026-01-04 02:26</td><td class="subright">4927317598</td></tr>
+<tr><td class="subregion"><a href="france-260103.osm.pbf.md5">france-260103.osm.pbf.md5</a></td><td class="subright">2026-01-04 02:26</td><td class="subright">56</td></tr>
+<tr><td class="subregion"><a href="france-260104.osm.pbf">france-260104.osm.pbf</a></td><td class="subright">2026-01-05 03:34</td><td class="subright">4927868446</td></tr>
+<tr><td class="subregion"><a href="france-260104.osm.pbf.md5">france-260104.osm.pbf.md5</a></td><td class="subright">2026-01-05 03:34</td><td class="subright">56</td></tr>
+<tr><td class="subregion"><a href="france-260105.osm.pbf">france-260105.osm.pbf</a></td><td class="subright">2026-01-06 02:51</td><td class="subright">4928522538</td></tr>
+<tr><td class="subregion"><a href="france-260105.osm.pbf.md5">france-260105.osm.pbf.md5</a></td><td class="subright">2026-01-06 02:51</td><td class="subright">56</td></tr>
+<tr><td class="subregion"><a href="france-260106.osm.pbf">france-260106.osm.pbf</a></td><td class="subright">2026-01-07 03:49</td><td class="subright">4929118922</td></tr>
+<tr><td class="subregion"><a href="france-260106.osm.pbf.md5">france-260106.osm.pbf.md5</a></td><td class="subright">2026-01-07 03:49</td><td class="subright">56</td></tr>
+<tr><td class="subregion"><a href="france-updates">france-updates</a></td><td class="subright">2026-01-07 03:54</td><td class="subright">4096</td></tr>
+<tr><td class="subregion"><a href="france.kml">france.kml</a></td><td class="subright">2026-01-07 03:45</td><td class="subright">10778</td></tr>
+<tr><td class="subregion"><a href="france.poly">france.poly</a></td><td class="subright">2026-01-07 03:42</td><td class="subright">15345</td></tr>
+</table></div><h3>Sub Regions</h3><p>Click on the region name to see the overview page for that region, or select one of the
+file extension links for quick access.</p>
+<table id="subregions">
+<tr>
+   <th class="subregion">Sub Region</th>
+   <th colspan="3">Quick Links</th>
+</tr>
+<tr>
+   <th>&nbsp;</th>
+   <th colspan="2">.osm.pbf</th>
+   <th>.shp.zip</th>
+</tr>
+<tr onMouseOver="loadkml('france/alsace.kml')"><td class="subregion"><a href="france/alsace.html">Alsace</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/alsace-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(122&nbsp;MB)</td><td> <a href="france/alsace-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/aquitaine.kml')"><td class="subregion"><a href="france/aquitaine.html">Aquitaine</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/aquitaine-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(274&nbsp;MB)</td><td> <a href="france/aquitaine-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/auvergne.kml')"><td class="subregion"><a href="france/auvergne.html">Auvergne</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/auvergne-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(140&nbsp;MB)</td><td> <a href="france/auvergne-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/basse-normandie.kml')"><td class="subregion"><a href="france/basse-normandie.html">Basse-Normandie</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/basse-normandie-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(133&nbsp;MB)</td><td> <a href="france/basse-normandie-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/bourgogne.kml')"><td class="subregion"><a href="france/bourgogne.html">Bourgogne</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/bourgogne-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(184&nbsp;MB)</td><td> <a href="france/bourgogne-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/bretagne.kml')"><td class="subregion"><a href="france/bretagne.html">Bretagne</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/bretagne-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(305&nbsp;MB)</td><td> <a href="france/bretagne-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/centre.kml')"><td class="subregion"><a href="france/centre.html">Centre</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/centre-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(223&nbsp;MB)</td><td> <a href="france/centre-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/champagne-ardenne.kml')"><td class="subregion"><a href="france/champagne-ardenne.html">Champagne Ardenne</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/champagne-ardenne-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(98&nbsp;MB)</td><td> <a href="france/champagne-ardenne-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/corse.kml')"><td class="subregion"><a href="france/corse.html">Corse</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/corse-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(32.0&nbsp;MB)</td><td> <a href="france/corse-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/franche-comte.kml')"><td class="subregion"><a href="france/franche-comte.html">Franche Comte</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/franche-comte-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(115&nbsp;MB)</td><td> <a href="france/franche-comte-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/guadeloupe.kml')"><td class="subregion"><a href="france/guadeloupe.html">Guadeloupe</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/guadeloupe-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(22.4&nbsp;MB)</td><td> <img alt="not available" src="/img/cross.png"></td></tr>
+<tr onMouseOver="loadkml('france/guyane.kml')"><td class="subregion"><a href="france/guyane.html">Guyane</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/guyane-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(13.5&nbsp;MB)</td><td> <a href="france/guyane-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/haute-normandie.kml')"><td class="subregion"><a href="france/haute-normandie.html">Haute-Normandie</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/haute-normandie-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(98&nbsp;MB)</td><td> <a href="france/haute-normandie-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/ile-de-france.kml')"><td class="subregion"><a href="france/ile-de-france.html">Ile-de-France</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/ile-de-france-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(312&nbsp;MB)</td><td> <a href="france/ile-de-france-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/languedoc-roussillon.kml')"><td class="subregion"><a href="france/languedoc-roussillon.html">Languedoc-Roussillon</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/languedoc-roussillon-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(248&nbsp;MB)</td><td> <a href="france/languedoc-roussillon-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/limousin.kml')"><td class="subregion"><a href="france/limousin.html">Limousin</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/limousin-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(92&nbsp;MB)</td><td> <a href="france/limousin-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/lorraine.kml')"><td class="subregion"><a href="france/lorraine.html">Lorraine</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/lorraine-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(159&nbsp;MB)</td><td> <a href="france/lorraine-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/martinique.kml')"><td class="subregion"><a href="france/martinique.html">Martinique</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/martinique-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(18.7&nbsp;MB)</td><td> <img alt="not available" src="/img/cross.png"></td></tr>
+<tr onMouseOver="loadkml('france/mayotte.kml')"><td class="subregion"><a href="france/mayotte.html">Mayotte</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/mayotte-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(10.1&nbsp;MB)</td><td> <img alt="not available" src="/img/cross.png"></td></tr>
+<tr onMouseOver="loadkml('france/midi-pyrenees.kml')"><td class="subregion"><a href="france/midi-pyrenees.html">Midi-Pyrenees</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/midi-pyrenees-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(332&nbsp;MB)</td><td> <a href="france/midi-pyrenees-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/nord-pas-de-calais.kml')"><td class="subregion"><a href="france/nord-pas-de-calais.html">Nord-Pas-de-Calais</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/nord-pas-de-calais-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(221&nbsp;MB)</td><td> <a href="france/nord-pas-de-calais-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/pays-de-la-loire.kml')"><td class="subregion"><a href="france/pays-de-la-loire.html">Pays de la Loire</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/pays-de-la-loire-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(345&nbsp;MB)</td><td> <a href="france/pays-de-la-loire-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/picardie.kml')"><td class="subregion"><a href="france/picardie.html">Picardie</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/picardie-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(124&nbsp;MB)</td><td> <a href="france/picardie-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/poitou-charentes.kml')"><td class="subregion"><a href="france/poitou-charentes.html">Poitou-Charentes</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/poitou-charentes-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(214&nbsp;MB)</td><td> <a href="france/poitou-charentes-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/provence-alpes-cote-d-azur.kml')"><td class="subregion"><a href="france/provence-alpes-cote-d-azur.html">Provence Alpes-Cote-d'Azur</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/provence-alpes-cote-d-azur-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(359&nbsp;MB)</td><td> <a href="france/provence-alpes-cote-d-azur-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+<tr onMouseOver="loadkml('france/reunion.kml')"><td class="subregion"><a href="france/reunion.html">Reunion</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/reunion-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(32.0&nbsp;MB)</td><td> <img alt="not available" src="/img/cross.png"></td></tr>
+<tr onMouseOver="loadkml('france/rhone-alpes.kml')"><td class="subregion"><a href="france/rhone-alpes.html">Rhone-Alpes</a></td>
+<td style="border-right: 0px; margin-right: 0px; padding-right: 0px;"><a href="france/rhone-alpes-latest.osm.pbf">[.osm.pbf]</a></td><td style="border-left: 0px; margin-left: 0px; padding-left: 0px;">(486&nbsp;MB)</td><td> <a href="france/rhone-alpes-latest-free.shp.zip">[.shp.zip]</a></td></tr>
+</table>
+</div>
+<div id="download-right">
+   <div id="noscroll">
+   <div id="map"></div>
+
+   <div class="customized_shapes">
+<p>
+      <img alt="small flag of UK" src="/img/en.png">
+Not what you were looking for?
+Geofabrik is a consulting and software development firm based in Karlsruhe, Germany
+specializing in OpenStreetMap services. We're happy to help you with data
+preparation, processing, server setup and the like. <a href="http://www.geofabrik.de/data/shapefiles.html">Check out our web site</a>
+and contact us if we can be of service.
+
+      </p>
+   </div>
+   
+   <div class="customized_shapes">
+      <p>
+      <img alt="small flag of Germany" src="/img/de.png">
+      Nicht das Richtige dabei? 
+Die Geofabrik ist ein auf OpenStreetMap spezialisiertes Beratungs- und Softwareentwicklungsunternehmen in Karlsruhe.
+Gern helfen wir Ihnen bei der Datenaufbereitung, Datenkonvertierung, Serverinstallation und &auml;hnlichen Aufgaben.
+<a href="http://www.geofabrik.de/data/shapefiles.html">Besuchen Sie unsere Webseite</a> und sprechen Sie mit uns, wenn wir Ihnen 
+helfen k&ouml;nnen.
+      </p>
+   </div>
+   </div>
+</div>
+</div>
+<div id="download-copyright">
+Data processed by
+<a href="http://www.geofabrik.de/">Geofabrik GmbH</a>
+and created by 
+<a href="http://www.openstreetmap.org/">OpenStreetMap Contributors</a>
+|
+<a href="http://opendatacommons.org/licenses/odbl/">License: ODbL 1.0</a>
+|
+<a href="http://www.geofabrik.de/geofabrik/contact.html">Contact</a>
+|
+<a href="http://www.geofabrik.de/geofabrik/imprint.html">Legal Notice/Privacy Policy</a>

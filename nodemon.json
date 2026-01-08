@@ -1,0 +1,12 @@
+{
+    "ignore": [
+        "**/*.log",
+        "**/*.lock",
+        "server/bridge_debug.log",
+        "server/bridge.lock",
+        "osrm-data/"
+    ],
+    "watch": [
+        "server/"
+    ]
+}

@@ -1,0 +1,430 @@
+/* ================================================
+   OPTIMISATIONS MOBILE - À ajouter à index.css
+   ================================================ */
+
+@layer utilities {
+
+    /* Touch-friendly elements */
+    .touch-target {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Prevent text selection on buttons/interactive elements */
+    .no-select {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Smooth scrolling on mobile */
+    .smooth-scroll {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+
+    /* Hide scrollbar on mobile but keep functionality */
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Safe area padding for notched devices */
+    .safe-top {
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .safe-left {
+        padding-left: env(safe-area-inset-left);
+    }
+
+    .safe-right {
+        padding-right: env(safe-area-inset-right);
+    }
+
+    /* Mobile-optimized spacing */
+    .mobile-padding {
+        @apply px-4 py-3;
+    }
+
+    @media (min-width: 768px) {
+        .mobile-padding {
+            @apply px-6 py-4;
+        }
+    }
+
+    /* Responsive text sizes */
+    .text-responsive-sm {
+        @apply text-xs;
+    }
+
+    @media (min-width: 640px) {
+        .text-responsive-sm {
+            @apply text-sm;
+        }
+    }
+
+    .text-responsive-base {
+        @apply text-sm;
+    }
+
+    @media (min-width: 640px) {
+        .text-responsive-base {
+            @apply text-base;
+        }
+    }
+
+    .text-responsive-lg {
+        @apply text-base;
+    }
+
+    @media (min-width: 640px) {
+        .text-responsive-lg {
+            @apply text-lg;
+        }
+    }
+
+    /* Mobile-friendly cards */
+    .mobile-card {
+        @apply rounded-lg p-4 shadow-sm;
+    }
+
+    @media (min-width: 768px) {
+        .mobile-card {
+            @apply rounded-xl p-6 shadow-md;
+        }
+    }
+
+    /* Sticky header with safe area */
+    .sticky-header {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        padding-top: env(safe-area-inset-top);
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    /* Mobile bottom navigation */
+    .mobile-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        padding-bottom: env(safe-area-inset-bottom);
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.95);
+        border-top: 1px solid hsl(var(--border));
+    }
+
+    /* Prevent zoom on input focus (iOS) */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    textarea,
+    select {
+        font-size: 16px !important;
+    }
+
+    /* Pull-to-refresh indicator */
+    .ptr-indicator {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        padding: 0.5rem 1rem;
+        background: hsl(var(--primary));
+        color: white;
+        border-radius: 0 0 0.5rem 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .ptr-indicator.active {
+        opacity: 1;
+    }
+
+    /* Loading skeleton for mobile */
+    .skeleton-mobile {
+        @apply animate-pulse bg-gray-200 rounded;
+    }
+
+    /* Mobile-optimized table */
+    .mobile-table {
+        @apply block overflow-x-auto;
+    }
+
+    .mobile-table thead {
+        @apply hidden;
+    }
+
+    @media (min-width: 768px) {
+        .mobile-table thead {
+            @apply table-header-group;
+        }
+    }
+
+    .mobile-table tr {
+        @apply block mb-4 border border-border rounded-lg p-4;
+    }
+
+    @media (min-width: 768px) {
+        .mobile-table tr {
+            @apply table-row mb-0 border-0 rounded-none p-0;
+        }
+    }
+
+    .mobile-table td {
+        @apply block text-right;
+    }
+
+    @media (min-width: 768px) {
+        .mobile-table td {
+            @apply table-cell;
+        }
+    }
+
+    .mobile-table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 600;
+        color: hsl(var(--muted-foreground));
+    }
+
+    @media (min-width: 768px) {
+        .mobile-table td::before {
+            content: none;
+        }
+    }
+
+    /* Landscape mode adjustments */
+    @media (max-height: 500px) and (orientation: landscape) {
+        .hide-landscape {
+            display: none;
+        }
+
+        .compact-landscape {
+            @apply py-1 text-sm;
+        }
+    }
+
+    /* Haptic feedback simulation */
+    .haptic-light {
+        transition: transform 0.1s;
+    }
+
+    .haptic-light:active {
+        transform: scale(0.98);
+    }
+
+    .haptic-medium {
+        transition: transform 0.15s;
+    }
+
+    .haptic-medium:active {
+        transform: scale(0.95);
+    }
+
+    /* Swipe indicators */
+    .swipe-indicator {
+        position: relative;
+    }
+
+    .swipe-indicator::after {
+        content: '';
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 8px solid hsl(var(--muted-foreground) / 0.3);
+    }
+
+    /* Mobile modal */
+    .mobile-modal {
+        @apply fixed inset-0 z-50 flex items-end;
+    }
+
+    @media (min-width: 640px) {
+        .mobile-modal {
+            @apply items-center justify-center;
+        }
+    }
+
+    .mobile-modal-content {
+        @apply w-full rounded-t-2xl bg-white p-6 shadow-2xl;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    @media (min-width: 640px) {
+        .mobile-modal-content {
+            @apply max-w-lg rounded-2xl;
+        }
+    }
+
+    /* Offline indicator */
+    .offline-banner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        padding: 0.75rem;
+        background: hsl(var(--warning));
+        color: hsl(var(--warning-foreground));
+        text-align: center;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transform: translateY(-100%);
+        transition: transform 0.3s;
+    }
+
+    .offline-banner.show {
+        transform: translateY(0);
+    }
+
+    /* Mobile-friendly form inputs */
+    .mobile-input {
+        @apply w-full px-4 py-3 text-base rounded-lg border border-input bg-white;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+    .mobile-input:focus {
+        @apply outline-none ring-2 ring-primary border-transparent;
+    }
+
+    /* Mobile button sizes */
+    .btn-mobile-sm {
+        @apply px-3 py-2 text-sm;
+    }
+
+    .btn-mobile-md {
+        @apply px-4 py-3 text-base;
+    }
+
+    .btn-mobile-lg {
+        @apply px-6 py-4 text-lg;
+    }
+
+    /* Grid responsive */
+    .grid-mobile {
+        @apply grid grid-cols-1 gap-4;
+    }
+
+    @media (min-width: 640px) {
+        .grid-mobile {
+            @apply grid-cols-2;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .grid-mobile {
+            @apply grid-cols-3;
+        }
+    }
+
+    /* Flex mobile */
+    .flex-mobile-col {
+        @apply flex flex-col;
+    }
+
+    @media (min-width: 768px) {
+        .flex-mobile-col {
+            @apply flex-row;
+        }
+    }
+}
+
+/* ================================================
+   ANIMATIONS MOBILE
+   ================================================ */
+
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-down {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+}
+
+.animate-slide-down {
+    animation: slide-down 0.3s ease-out;
+}
+
+.animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+}
+
+/* ================================================
+   PRINT STYLES (pour exports)
+   ================================================ */
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .print-break {
+        page-break-after: always;
+    }
+
+    .print-avoid-break {
+        page-break-inside: avoid;
+    }
+}

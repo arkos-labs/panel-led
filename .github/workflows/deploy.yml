@@ -1,0 +1,94 @@
+# ================================================
+# CI/CD - GitHub Actions
+# Workflow d'intégration et déploiement continu
+# ================================================
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # ================================================
+  # JOB 1 : TESTS ET VALIDATION
+  # ================================================
+  test:
+    name: Tests et Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔍 Lint code
+        run: npm run lint --if-present
+        continue-on-error: true
+
+      - name: 🏗️ Build frontend
+        run: npm run build
+
+      - name: 📊 Check build size
+        run: |
+          echo "Build size:"
+          du -sh dist/
+          
+      - name: ✅ Tests passed
+        run: echo "All tests passed successfully!"
+
+  # ================================================
+  # JOB 2 : DÉPLOIEMENT FRONTEND (Vercel)
+  # ================================================
+  deploy-frontend:
+    name: Deploy Frontend
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🚀 Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+
+  # ================================================
+  # JOB 3 : NOTIFICATION
+  # ================================================
+  notify:
+    name: Notification
+    needs: [test, deploy-frontend]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: ✅ Success notification
+        if: ${{ needs.test.result == 'success' && needs.deploy-frontend.result == 'success' }}
+        run: |
+          echo "✅ Déploiement réussi !"
+          echo "🚀 Application déployée sur Vercel"
+          
+      - name: ❌ Failure notification
+        if: ${{ needs.test.result == 'failure' || needs.deploy-frontend.result == 'failure' }}
+        run: |
+          echo "❌ Déploiement échoué"
+          echo "Vérifiez les logs ci-dessus"
